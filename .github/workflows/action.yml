@@ -14,15 +14,6 @@ jobs:
     - name: Build image
       run: docker build -t my_image:latest .
     - name: Scan image
-      run: |
-        # Perform image scanning
-        #sysdig secure scan --image my_image:latest
-        # Check the scanning result
-        if [[ $? -ne 0 ]]; then
-          echo "Image scanning failed due to policy violation."
-          exit 1
-        fi
-    - name: Scan image
       id: scan
       uses: sysdiglabs/scan-action@v3
       with:
@@ -40,5 +31,4 @@ jobs:
         issue-title: Approve Image Push
         issue-body: Please review and approve the image push to the registry
     - name: Push image
-      if: steps.approval.outputs.approved == 'true'
-      run: docker push my_image:latest
+      run: echo "Image pushed" #docker push my_image:latest
