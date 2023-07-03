@@ -5,6 +5,8 @@ on:
     - main
 jobs:
   build_and_push:
+    permissions:
+      issues: write
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
