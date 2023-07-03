@@ -14,12 +14,20 @@ jobs:
     - name: Scan image
       run: |
         # Perform image scanning
-        sysdig secure scan --image my_image:latest
+        #sysdig secure scan --image my_image:latest
         # Check the scanning result
         if [[ $? -ne 0 ]]; then
           echo "Image scanning failed due to policy violation."
           exit 1
         fi
+    - name: Scan image
+      id: scan
+      uses: sysdiglabs/scan-action@v3
+      with:
+        image-tag: "my_image:latest"
+        sysdig-secure-token: ${{ secrets.SYSDIG_SECURE_TOKEN }}
+        input-type: docker-daemon
+        run-as-user: root
     - name: Approval
       id: approval
       uses: trstringer/manual-approval@v1.9.0
