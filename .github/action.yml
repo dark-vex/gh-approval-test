@@ -1,0 +1,31 @@
+name: Image Push Workflow
+on:
+push:
+   branches:
+     - main
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Build image
+      run: docker build -t my_image:latest .
+    - name: Scan image
+      run: |
+        # Perform image scanning
+        sysdig secure scan --image my_image:latest
+        # Check the scanning result
+        if [[ $? -ne 0 ]]; then
+          echo "Image scanning failed due to policy violation."
+          exit 1
+        fi
+    - name: Approval
+      id: approval
+      uses: repo/approvals-action@v2
+      with:
+        approval_title: Approve Image Push
+        approval_message: Please review and approve the image push to the registry
+    - name: Push image
+      if: steps.approval.outputs.approved == 'true'
+      run: docker push my_image:latest
