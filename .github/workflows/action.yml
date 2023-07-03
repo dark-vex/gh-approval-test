@@ -22,10 +22,13 @@ jobs:
         fi
     - name: Approval
       id: approval
-      uses: repo/approvals-action@v2
+      uses: trstringer/manual-approval@v1.9.0
       with:
-        approval_title: Approve Image Push
-        approval_message: Please review and approve the image push to the registry
+        secret: ${{ github.TOKEN }}
+        approvers: dark-vex
+        minimum-approvals: 1
+        issue-title: Approve Image Push
+        issue-body: Please review and approve the image push to the registry
     - name: Push image
       if: steps.approval.outputs.approved == 'true'
       run: docker push my_image:latest
