@@ -1,2 +1,2 @@
 # gh-approval-test
-test approval
+test pr approval
