@@ -18,6 +18,8 @@ RUN apt-get -y update && \
     curl -o streama.jar -L $URL_DOWNLOAD_LATEST_RELEASE && \
     chmod u+x streama.jar
 
+RUN echo "ciao"
+
 EXPOSE 8080
 
 ENTRYPOINT [ "java", "-jar", "streama.jar" ]
