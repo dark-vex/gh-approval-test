@@ -1,0 +1,28 @@
+name: Image Push Workflow - new engine
+on:
+  push:
+    branches:
+    - main
+jobs:
+  build_and_push:
+    permissions:
+      issues: write
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Build image
+      run: docker build -t my_image:latest .
+    - name: Scan the image using sysdig-cli-scanner
+      #continue-on-error: true
+      env:
+        SECURE_API_TOKEN: ${{ secrets.SYSDIG_SECURE_TOKEN }}
+      run: |
+          curl -LO "https://download.sysdig.com/scanning/bin/sysdig-cli-scanner/$(curl -L -s https://download.sysdig.com/scanning/sysdig-cli-scanner/latest_version.txt)/linux/amd64/sysdig-cli-scanner" && \
+          chmod +x sysdig-cli-scanner && \
+          ./sysdig-cli-scanner \
+            --apiurl https://secure.sysdig.com \
+            my_image:latest \
+            --console-log 
+    - name: Push image
+      run: echo "Image pushed" #docker push my_image:latest
