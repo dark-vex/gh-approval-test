@@ -1,25 +1,6 @@
 # Just a sample docker
-#FROM nginx:1-alpine
+FROM nginx:1-alpine
 
-#RUN apk -U upgrade && rm -rf /var/cache/apk/*
+RUN apk -U upgrade && rm -rf /var/cache/apk/*
 
-#RUN echo "ciao"
-
-
-FROM openjdk:20-ea-29-jdk-slim
-
-WORKDIR /app/streama
-
-RUN apt-get -y update && \
-    apt-get -y install curl && \
-    apt-get -y clean && \
-    apt-get -y autoremove && \
-    URL_DOWNLOAD_LATEST_RELEASE=$(curl -L https://api.github.com/repos/streamaserver/streama/releases | grep -i browser_download_url | head -n 1 | cut -d '"' -f 4) && \
-    curl -o streama.jar -L $URL_DOWNLOAD_LATEST_RELEASE && \
-    chmod u+x streama.jar
-
-RUN echo "ciao"
-
-EXPOSE 8080
-
-ENTRYPOINT [ "java", "-jar", "streama.jar" ]
+CMD ["nginx" "-g" "daemon off;"]
